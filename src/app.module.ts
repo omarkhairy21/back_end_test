@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
+import { GameDataModule } from './game-data/game-data.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { AuthModule } from './auth/auth.module';
       synchronize: true,
     }),
     AuthModule,
+    GameDataModule,
   ],
   controllers: [AppController],
   providers: [AppService],
