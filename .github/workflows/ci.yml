@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+      branches:
+       - master
+      
+
+jobs:
+  buiild-and-test:
+      runs-on: ubuntu-latest
+      name: Build and Test
+      steps:
+        - uses: actions/checkout@v3
+        - uses: actions/setup-node@v3
+          with:
+            node-version: '18.13.0'
+            registry-url: 'https://registry.npmjs.org'
+        - name: Install  yarn
+          run: npm install -g yarn
+        - name: Install dependencies
+          run: yarn install
+        - name: Build
+          run: yarn build
+        - name: Test
+          run: yarn test
+        
