@@ -18,8 +18,14 @@ export class AuthService {
     // find the user in your database
     const user = await this.userService.findOneByUsername(username);
     if (!user) return null;
-    // compare the provided password with the stored password
-    if (user.password === password) return user;
+    // compare the provided password with decrypted password
+    const isPasswordValid = await this.userService.comparePassword(
+      password,
+      user.password,
+    );
+
+    if (isPasswordValid) return user;
+
     return null;
   }
 

@@ -19,6 +19,12 @@ export class GameDataService {
     private userTreasureRepository: Repository<UserTreasure>,
   ) {}
 
+  async createTreasure(name: string, description: string) {
+    const treasure = this.treasureRepository.create({ name, description });
+    await this.treasureRepository.save(treasure);
+    return { message: 'Treasure created successfully!' };
+  }
+
   async collectTreasure(userId: number, treasureId: number) {
     const today = new Date();
 

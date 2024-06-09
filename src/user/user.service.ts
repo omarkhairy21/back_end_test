@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto, UpdateUserDto, UserDto } from './dto/user.dto';
+import { compareSync } from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -24,7 +25,19 @@ export class UserService {
   }
 
   async create(user: CreateUserDto): Promise<User> {
-    return await this.userRepository.save(user);
+    const userExists = await this.userRepository.findOne({
+      where: [{ email: user.email }, { username: user.username }],
+    });
+    if (userExists) throw new HttpException('User already exists', 400);
+    const newUser = this.userRepository.create(user);
+    return await this.userRepository.save(newUser);
+  }
+
+  async comparePassword(
+    password: string,
+    encryptedPassword: string,
+  ): Promise<boolean> {
+    return compareSync(password, encryptedPassword);
   }
 
   async update(
