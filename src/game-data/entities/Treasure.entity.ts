@@ -5,6 +5,7 @@ import {
   Column,
   ManyToOne,
   OneToMany,
+  OneToOne,
 } from 'typeorm';
 
 @Entity()
@@ -35,4 +36,27 @@ export class UserTreasure {
 
   @Column()
   collectedAt: Date;
+}
+
+// tade entit
+
+@Entity()
+export class Trade {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  tradeTokens: number;
+
+  @OneToOne(() => User)
+  fromUserId: number;
+
+  @OneToOne(() => User)
+  toUserId: number;
+
+  @Column()
+  tradeStatus: string;
+
+  @Column()
+  tradeDate: Date;
 }

@@ -25,13 +25,10 @@ export class User {
   @Column({ default: false })
   isVerified: boolean;
 
-  @Column({ default: 0 })
-  treasuresCollected: number;
-
   @OneToMany(() => UserTreasure, (userTreasure) => userTreasure.user)
   treasures: UserTreasure[];
 
-  @Column({ default: 0 })
+  @Column({ default: 100 })
   tradeTokens: number;
 
   // Before saving the user, hash the password

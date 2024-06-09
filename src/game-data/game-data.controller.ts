@@ -1,14 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
-  Req,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards, Req } from '@nestjs/common';
 import { GameDataService } from './game-data.service';
 import {
   ApiTags,
@@ -60,6 +50,50 @@ export class GameDataController {
   @ApiNotFoundResponse({ description: 'User not found.' })
   getStats(@Req() req) {
     return this.gameDataService.getStats(req.user.id);
+  }
+
+  // leaderboard
+  @Get('leaderboard')
+  @ApiOperation({ summary: 'Get leaderboard' })
+  @ApiOkResponse({
+    description: 'The leaderboard has been successfully fetched.',
+  })
+  getLeaderboard() {
+    return this.gameDataService.getLeaderBoard();
+  }
+
+  // trade treasure
+  @Post('trade-treasure')
+  @ApiOperation({ summary: 'Trade treasure' })
+  @ApiCreatedResponse({
+    description: 'The treasure has been successfully traded.',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        sellerId: {
+          type: 'number',
+          example: 2,
+        },
+        treasureId: {
+          type: 'number',
+          example: 1,
+        },
+      },
+    },
+  })
+  @ApiBadRequestResponse({ description: 'Invalid request body.' })
+  @UseGuards(AuthGuard('jwt'))
+  tradeTreasure(
+    @Body() data: { tradeTokens: number; sellerId: number; treasureId: number },
+    @Req() req,
+  ) {
+    return this.gameDataService.tradeTreasure(
+      req.user.id,
+      data.sellerId,
+      data.treasureId,
+    );
   }
 
   // create treasure

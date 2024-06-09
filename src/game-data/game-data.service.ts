@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { Treasure, UserTreasure } from './entities/Treasure.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -88,44 +88,77 @@ export class GameDataService {
     };
   }
 
-  // async getLeaderBoard() {
-  //   const users = await this.userModel
-  //     .find()
-  //     .sort({ 'treasures.length': -1 })
-  //     .limit(10)
-  //     .populate('treasures');
-  //   return users.map((user) => ({
-  //     email: user.email, // Assuming email is displayed publicly in the leaderboard
-  //     treasuresCollected: user.treasures.length,
-  //   }));
-  // }
+  async getLeaderBoard() {
+    const leaderboard = await this.userTreasureRepository
+      .createQueryBuilder('userTreasure')
+      .select('user.username', 'username')
+      .addSelect('COUNT(userTreasure.treasureId)', 'treasuresCollected')
+      .innerJoin('userTreasure.user', 'user')
+      .groupBy('user.username')
+      .orderBy('treasuresCollected', 'DESC')
+      .getRawMany();
 
-  // async tradeTreasure(userId1: string, userId2: string, treasureId: string) {
-  //   const user1 = await this.userModel.findById(userId1);
-  //   const user2 = await this.userModel.findById(userId2);
+    return leaderboard;
+  }
 
-  //   const treasureToTrade = user1.treasures.find(
-  //     (treasure) => treasure._id.toString() === treasureId,
-  //   );
+  async tradeTreasure(buyerId: number, sellerId: number, treasureId: number) {
+    const entityManager = this.userRepository.manager;
+    const message = await entityManager.transaction(
+      async (transactionalEntityManager) => {
+        const buyer = await transactionalEntityManager.findOne(User, {
+          where: { id: buyerId },
+        });
 
-  //   if (!treasureToTrade) {
-  //     throw new Error("Treasure not found in user's collection.");
-  //   }
+        const seller = await transactionalEntityManager.findOne(User, {
+          where: { id: sellerId },
+        });
 
-  //   // Perform atomic transaction using database sessions or transactions functionality
+        const treasure = await transactionalEntityManager.findOne(Treasure, {
+          where: { id: treasureId },
+          relations: ['userTreasures', 'userTreasures.user'],
+        });
 
-  //   user1.treasures.pull(treasureToTrade);
-  //   user2.treasures.push(treasureToTrade);
+        if (!buyer || !seller || !treasure) {
+          throw new HttpException(
+            'Could not find buyer, seller, or treasure',
+            400,
+          );
+        }
 
-  //   await Promise.all([user1.save(), user2.save()]);
+        // Check if seller has the treasure
+        const userTreasure = treasure.userTreasures.find(
+          (ut) => ut.user.id === seller.id,
+        );
 
-  //   return { message: 'Treasure trade successful!' };
-  // }
+        if (!userTreasure) {
+          throw new HttpException('Seller does not have the treasure', 400);
+        }
 
-  // // Implement logic to detect and prevent cheating (e.g., treasure duplication or manipulation)
-  // async detectCheating(userId: string) {
-  //   // Implement logic to check for suspicious activity in user's treasure collection
-  //   // This could involve analyzing timestamps, treasure types, etc.
-  //   // Throw an error or take appropriate action if cheating is detected
-  // }
+        // Check if buyer has enough trade tokens
+        if (buyer.tradeTokens < 1) {
+          throw new HttpException(
+            'Buyer does not have enough trade tokens',
+            400,
+          );
+        }
+        // Update trade tokens
+        buyer.tradeTokens -= 1;
+
+        seller.tradeTokens += 1;
+
+        // Update treasure ownership
+        userTreasure.user = buyer;
+
+        // Save changes
+        await transactionalEntityManager.save(buyer);
+
+        await transactionalEntityManager.save(seller);
+
+        await transactionalEntityManager.save(userTreasure);
+
+        return { message: 'Treasure traded successfully!' };
+      },
+    );
+    return message;
+  }
 }
