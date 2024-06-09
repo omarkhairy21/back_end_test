@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for vending-machine-api on 2024-03-09T03:55:58+02:00
+# fly.toml app configuration file generated for treasure-hunt-api on 2024-03-09T03:55:58+02:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'vending-machine-api'
+app = 'treasure-hunt-api'
 primary_region = 'ams'
 
 [build]

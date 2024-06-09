@@ -1,6 +1,6 @@
 ## Description
 
-This is a simple Vending Machine API that allows users to buy products and get change back.
+This is a simple Treasure Hunt API that allows users to buy products and get change back.
 
 ## Tech Stack
 

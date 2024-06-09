@@ -11,7 +11,7 @@ import { GameDataModule } from './game-data/game-data.module';
     UserModule,
     TypeOrmModule.forRoot({
       type: 'sqlite',
-      database: 'vending-machine.db',
+      database: 'treasure-hunt.db',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),

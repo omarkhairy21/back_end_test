@@ -1,19 +1,29 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { UserTreasure } from '@/game-data/entities/Treasure.entity';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
+  @Column()
+  email: string;
+
+  @Column()
   username: string;
 
   @Column()
   password: string;
 
-  @Column({ default: 0 })
-  deposit: number;
+  @Column({ default: false })
+  isVerified: boolean;
 
-  @Column()
-  role: string;
+  @Column({ default: 0 })
+  treasuresCollected: number;
+
+  @OneToMany(() => UserTreasure, (userTreasure) => userTreasure.user)
+  treasures: UserTreasure[];
+
+  @Column({ default: 0 })
+  tradeTokens: number;
 }

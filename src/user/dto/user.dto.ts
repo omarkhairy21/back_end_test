@@ -25,19 +25,6 @@ export class CreateUserDto {
   @IsString()
   @MinLength(8)
   password: string;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsNumber()
-  deposit: number;
-
-  @ApiProperty({
-    required: true,
-    description: 'The role of user, buyer or seller',
-  })
-  @IsNotEmpty()
-  @IsString()
-  role: string;
 }
 
 export class UserDto extends CreateUserDto {

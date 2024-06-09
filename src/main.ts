@@ -9,14 +9,14 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
-  const logger = new Logger('VendingMachine');
+  const logger = new Logger('treasure-hunt');
   app.useLogger(logger);
 
   const config = new DocumentBuilder()
-    .setTitle('Vending Machine')
-    .setDescription('Vending machine API')
+    .setTitle('Treasure Hunt')
+    .setDescription('Treasure Hunt API')
     .setVersion('1.0')
-    .addTag('vending-machine')
+    .addTag('treasure-hunt')
     .addSecurityRequirements('bearer')
 
     .addBearerAuth()
