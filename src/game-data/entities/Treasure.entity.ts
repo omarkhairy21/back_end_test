@@ -6,6 +6,7 @@ import {
   ManyToOne,
   OneToMany,
   OneToOne,
+  Index,
 } from 'typeorm';
 
 @Entity()
@@ -24,6 +25,7 @@ export class Treasure {
 }
 
 @Entity()
+@Index(['user', 'collectedAt'], { unique: true })
 export class UserTreasure {
   @PrimaryGeneratedColumn()
   id: number;

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
@@ -6,17 +6,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { GameDataModule } from './game-data/game-data.module';
 import { ConfigModule } from '@nestjs/config';
+import { LoggingService } from './logging/logging.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     UserModule,
-    // TypeOrmModule.forRoot({
-    //   type: 'sqlite',
-    //   database: 'treasure-hunt.db',
-    //   entities: [__dirname + '/**/*.entity{.ts,.js}'],
-    //   synchronize: true,
-    // }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.PGHOST,
@@ -28,11 +23,18 @@ import { ConfigModule } from '@nestjs/config';
         rejectUnauthorized: false,
       },
       synchronize: true,
+      logging: 'all',
+      logger: 'advanced-console',
+      maxQueryExecutionTime: 100,
     }),
     AuthModule,
     GameDataModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, LoggingService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggingService).forRoutes('*');
+  }
+}
