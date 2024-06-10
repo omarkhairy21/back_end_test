@@ -1,12 +1,12 @@
 ## Description
 
-This is a simple Treasure Hunt API that allows users to buy products and get change back.
+This is a simple Treasure Hunt API that allows users to create a treasure hunt and add products to it.
 
 ## Tech Stack
 
 - NestJS
 - TypeORM
-- SQLite
+- Postgres
 
 # System Requirements
 
@@ -15,7 +15,7 @@ This is a simple Treasure Hunt API that allows users to buy products and get cha
 
 ## Api Documentation
 
-Docs can be found at https://vending-machine-api.fly.dev/api
+Docs can be found at https://treasure-hunt-api.fly.dev/api
 
 Note: On API I assumed endpoints get products and users allowed to be public, but in a real scenario, they should be private.
 
@@ -30,13 +30,13 @@ Note: On API I assumed endpoints get products and users allowed to be public, bu
 1. Build the image
 
 ```bash
-docker build -f "Dockerfile.dev" -t vendingmachineapi-dev:latest "." 
+docker build -f "Dockerfile.dev" -t treasure-hunt-api-dev:latest "." 
 ```
 
 2. Run the container
 
 ```bash
-docker run -p 3000:3000 vendingmachineapi-dev:latest
+docker run -p 3000:3000 treasure-hunt-api-dev:latest
 ```
 
 ## Installation without Docker

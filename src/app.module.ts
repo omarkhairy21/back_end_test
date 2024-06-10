@@ -5,14 +5,28 @@ import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { GameDataModule } from './game-data/game-data.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     UserModule,
+    // TypeOrmModule.forRoot({
+    //   type: 'sqlite',
+    //   database: 'treasure-hunt.db',
+    //   entities: [__dirname + '/**/*.entity{.ts,.js}'],
+    //   synchronize: true,
+    // }),
     TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: 'treasure-hunt.db',
+      type: 'postgres',
+      host: process.env.PGHOST,
+      database: process.env.PGDATABASE,
+      username: process.env.PGUSER,
+      password: process.env.PGPASSWORD,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      ssl: {
+        rejectUnauthorized: false,
+      },
       synchronize: true,
     }),
     AuthModule,

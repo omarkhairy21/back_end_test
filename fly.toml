@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for treasure-hunt-api on 2024-03-09T03:55:58+02:00
+# fly.toml app configuration file generated for treasure-hunt-api on 2024-06-10T21:23:16+04:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -16,7 +16,12 @@ primary_region = 'ams'
   min_machines_running = 0
   processes = ['app']
 
+[env]
+PGHOST = "ep-icy-breeze-a26muogc.eu-central-1.aws.neon.tech"
+PGDATABASE = "treasure-hunt"
+PGUSER = "treasure-hunt_owner"
+PGPASSWORD = "vxrVADSl3g9O"
+ENDPOINT_ID = "ep-icy-breeze-a26muogc"
+
 [[vm]]
-  cpu_kind = 'shared'
-  cpus = 1
-  memory_mb = 256
+  size = 'shared-cpu-1x'
