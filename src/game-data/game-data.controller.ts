@@ -17,7 +17,8 @@ export class GameDataController {
   constructor(private readonly gameDataService: GameDataService) {}
 
   @Post('collect-treasure')
-  @ApiOperation({ summary: 'Create game data' })
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: 'Create game data(Auth-JWT)' })
   @ApiCreatedResponse({
     description: 'The game data has been successfully created.',
   })
@@ -43,7 +44,10 @@ export class GameDataController {
 
   @Get('stats')
   @UseGuards(AuthGuard('jwt'))
-  @ApiOperation({ summary: 'Get collected treasure stats for the user' })
+  @ApiOperation({
+    summary: 'Get collected treasure stats for the user(Auth-JWT)',
+    description: 'Requires a valid JWT token.',
+  })
   @ApiOkResponse({
     description: 'The stats have been successfully fetched.',
   })
@@ -64,7 +68,8 @@ export class GameDataController {
 
   // trade treasure
   @Post('trade-treasure')
-  @ApiOperation({ summary: 'Trade treasure' })
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: 'Trade treasure(Auth-JWT)' })
   @ApiCreatedResponse({
     description: 'The treasure has been successfully traded.',
   })
@@ -84,7 +89,6 @@ export class GameDataController {
     },
   })
   @ApiBadRequestResponse({ description: 'Invalid request body.' })
-  @UseGuards(AuthGuard('jwt'))
   tradeTreasure(
     @Body() data: { tradeTokens: number; sellerId: number; treasureId: number },
     @Req() req,
