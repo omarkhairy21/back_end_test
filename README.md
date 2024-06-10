@@ -25,6 +25,12 @@ Note: On API I assumed endpoints get products and users allowed to be public, bu
 2. Use endpoint POST /auth/login to get a token.
 3. Add the token on swagger Authorize button.
 
+## Devops
+
+- The API is hosted on https://treasure-hunt-api.fly.dev/api
+- There is a ci/cd github action that runs tests and lints on every push to the main branch.
+- For watch and query logs [Grafana](https://fly-metrics.net/d/fly-logs/fly-logs?from=now-15m&to=now&var-app=treasure-hunt-api&var-instance=0801935a664768&orgId=105342&var-query=) please i did not deploy grafana it is provided out of the box by fly.io.
+
 ## Installation with Docker
 
 1. Build the image
