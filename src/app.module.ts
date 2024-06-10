@@ -25,7 +25,7 @@ import { LoggingService } from './logging/logging.service';
       synchronize: true,
       logging: 'all',
       logger: 'advanced-console',
-      maxQueryExecutionTime: 100,
+      maxQueryExecutionTime: 20,
     }),
     AuthModule,
     GameDataModule,
